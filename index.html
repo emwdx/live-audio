@@ -1,0 +1,1340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Assert Yourself — Communication Skills Trainer</title>
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --bg: #fbf7ef;
+  --surface: #fffdf8;
+  --surface2: #f4eadc;
+  --border: #e5d8c8;
+  --accent: #4f8f78;
+  --accent2: #2f6f5d;
+  --text: #2d332f;
+  --muted: #6f756c;
+  --success: #4f8f78;
+  --warn: #c27a3a;
+  --danger: #c65353;
+  --shadow: rgba(68, 52, 37, 0.11);
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  background:
+    linear-gradient(180deg, rgba(255,255,255,0.78), rgba(251,247,239,0.94)),
+    var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ── SETUP SCREEN ─────────────────────────────────── */
+#setup {
+  min-height: 100vh;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 2.5rem 1.5rem 4rem;
+  gap: 2rem;
+}
+
+.brand {
+  text-align: center;
+  animation: fadeDown 0.6s ease both;
+}
+
+.brand-title {
+  font-size: clamp(2rem, 5vw, 3rem);
+  font-weight: 800;
+  letter-spacing: 0;
+  background: linear-gradient(135deg, #2f6f5d 0%, #4f8f78 48%, #d07b61 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.brand-sub {
+  color: var(--muted);
+  margin-top: 0.5rem;
+  font-size: 1rem;
+}
+
+.key-section {
+  width: 100%;
+  max-width: 480px;
+  animation: fadeDown 0.7s ease 0.1s both;
+}
+
+.key-section label {
+  display: block;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--muted);
+  margin-bottom: 0.5rem;
+}
+
+.key-row {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.key-input {
+  flex: 1;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  color: var(--text);
+  padding: 0.7rem 1rem;
+  border-radius: 0.6rem;
+  font-size: 0.875rem;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.key-input:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(79,143,120,0.16);
+}
+
+.btn-save {
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  padding: 0.7rem 1.25rem;
+  border-radius: 0.6rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s, transform 0.15s;
+}
+.btn-save:hover { background: var(--accent2); transform: translateY(-1px); }
+
+.key-note {
+  font-size: 0.75rem;
+  color: var(--muted);
+  margin-top: 0.4rem;
+}
+
+.scenarios-label {
+  width: 100%;
+  max-width: 840px;
+  font-size: 1.1rem;
+  font-weight: 700;
+  animation: fadeDown 0.7s ease 0.2s both;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 1rem;
+  width: 100%;
+  max-width: 840px;
+  animation: fadeDown 0.7s ease 0.3s both;
+}
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 0.5rem;
+  padding: 1.25rem;
+  cursor: pointer;
+  transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
+  position: relative;
+  overflow: hidden;
+}
+.card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(180deg, rgba(208,123,97,0.08), transparent 65%);
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+.card:hover { transform: translateY(-3px); border-color: var(--accent); box-shadow: 0 12px 30px var(--shadow); }
+.card:hover::after { opacity: 1; }
+
+.card-emoji { font-size: 2rem; margin-bottom: 0.75rem; }
+.card-title { font-size: 1rem; font-weight: 700; margin-bottom: 0.2rem; }
+.card-sub { font-size: 0.78rem; color: var(--muted); margin-bottom: 0.6rem; }
+.card-desc { font-size: 0.78rem; color: #6b665e; line-height: 1.55; }
+
+.badge {
+  display: inline-block;
+  margin-top: 0.75rem;
+  padding: 0.2rem 0.65rem;
+  border-radius: 9999px;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0;
+}
+.badge-medium { background: #fff0dc; color: var(--warn); }
+.badge-hard   { background: #ffe4df;  color: var(--danger); }
+
+/* ── CONVERSATION SCREEN ──────────────────────────── */
+#conv {
+  display: none;
+  position: fixed;
+  inset: 0;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.5rem;
+  transition: background 1s ease;
+}
+#conv.visible { display: flex; }
+#conv.phase-challenger {
+  background:
+    radial-gradient(ellipse at 20% 15%, rgba(208,123,97,0.14) 0%, transparent 55%),
+    radial-gradient(ellipse at 80% 85%, rgba(79,143,120,0.12) 0%, transparent 55%),
+    var(--bg);
+}
+#conv.phase-coach {
+  background:
+    radial-gradient(ellipse at 20% 15%, rgba(79,143,120,0.14) 0%, transparent 55%),
+    radial-gradient(ellipse at 80% 85%, rgba(208,123,97,0.10) 0%, transparent 55%),
+    var(--bg);
+}
+
+/* Top bar */
+.conv-top {
+  width: 100%;
+  max-width: 720px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.scenario-chip {
+  background: rgba(255,253,248,0.88);
+  border: 1px solid var(--border);
+  border-radius: 0.5rem;
+  padding: 0.65rem 0.9rem;
+  max-width: 380px;
+  flex: 1;
+  box-shadow: 0 8px 26px var(--shadow);
+}
+.scenario-chip-title { font-size: 0.78rem; font-weight: 700; color: var(--accent2); margin-bottom: 0.2rem; }
+.scenario-chip-text  { font-size: 0.75rem; color: var(--muted); line-height: 1.5; }
+
+.round-tracker {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem;
+  flex-shrink: 0;
+}
+.round-dots { display: flex; gap: 5px; }
+.rdot {
+  width: 9px; height: 9px;
+  border-radius: 50%;
+  background: #dbcdbb;
+  transition: background 0.35s, box-shadow 0.35s;
+}
+.rdot.lit { background: var(--accent); box-shadow: 0 0 0 4px rgba(79,143,120,0.12); }
+.round-label { font-size: 0.72rem; font-weight: 700; color: var(--muted); }
+
+/* Centre */
+.centre {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.25rem;
+}
+
+.avatar-wrap {
+  position: relative;
+  width: 130px; height: 130px;
+}
+.ring {
+  position: absolute; inset: 0;
+  border-radius: 50%;
+  border: 2px solid var(--accent);
+  opacity: 0;
+}
+.ring.r2 { animation-delay: 0.4s; }
+.ring.r3 { animation-delay: 0.8s; }
+.ring.active { animation: ring-pulse 1.6s ease-out infinite; }
+
+@keyframes ring-pulse {
+  0%   { transform: scale(1);   opacity: 0.85; }
+  100% { transform: scale(1.65); opacity: 0; }
+}
+
+.avatar-inner {
+  position: absolute; inset: 10px;
+  border-radius: 50%;
+  background: var(--surface2);
+  border: 2px solid var(--border);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 3rem;
+  z-index: 1;
+}
+
+.char-name { font-size: 1.5rem; font-weight: 800; }
+.char-role { font-size: 0.85rem; color: var(--muted); margin-top: 0.2rem; }
+
+/* Waveform */
+.wave-wrap {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  height: 52px;
+}
+.wbar {
+  width: 4px;
+  border-radius: 2px;
+  background: var(--accent);
+  min-height: 4px;
+  transition: height 0.08s ease, opacity 0.08s ease;
+}
+
+/* Status */
+.status-row { display: flex; align-items: center; gap: 0.5rem; }
+.sdot {
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  background: var(--muted);
+  flex-shrink: 0;
+  transition: background 0.3s, box-shadow 0.3s;
+}
+.sdot.listening { background: var(--success); box-shadow: 0 0 0 4px rgba(79,143,120,0.16); animation: blink 1.8s infinite; }
+.sdot.speaking  { background: var(--accent);  box-shadow: 0 0 0 4px rgba(79,143,120,0.16); }
+
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.45} }
+
+.stext { font-size: 0.875rem; color: var(--muted); }
+
+/* Bottom */
+.conv-bottom {
+  width: 100%;
+  max-width: 500px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.9rem;
+}
+
+.hint {
+  background: rgba(255,253,248,0.88);
+  border: 1px solid var(--border);
+  border-radius: 0.6rem;
+  padding: 0.65rem 1rem;
+  font-size: 0.78rem;
+  color: var(--muted);
+  text-align: center;
+  line-height: 1.5;
+  width: 100%;
+}
+.hint strong { color: var(--accent2); }
+
+.btn-coach {
+  display: none;
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  padding: 1rem 2.75rem;
+  border-radius: 9999px;
+  font-size: 1rem;
+  font-weight: 800;
+  cursor: pointer;
+  letter-spacing: 0;
+  box-shadow: 0 10px 24px rgba(79,143,120,0.25);
+  animation: coachPulse 2.2s ease-in-out infinite;
+  transition: transform 0.15s;
+}
+.btn-coach.show { display: block; }
+.btn-coach:hover { transform: scale(1.04); }
+
+@keyframes coachPulse {
+  0%,100% { box-shadow: 0 10px 24px rgba(79,143,120,0.22); }
+  50%      { box-shadow: 0 12px 28px rgba(79,143,120,0.34); }
+}
+
+.btn-end {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--muted);
+  padding: 0.5rem 1.75rem;
+  border-radius: 9999px;
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: border-color 0.3s, color 0.3s, box-shadow 0.3s;
+}
+.btn-end:hover { border-color: var(--danger); color: var(--danger); }
+.btn-end.nudge {
+  border-color: rgba(198,83,83,0.5);
+  color: var(--danger);
+  animation: endNudge 2.5s ease-in-out infinite;
+}
+@keyframes endNudge {
+  0%,100% { box-shadow: 0 0 0 0 rgba(198,83,83,0); }
+  50%      { box-shadow: 0 0 0 5px rgba(198,83,83,0.12); }
+}
+
+/* ── COMPLETE SCREEN ──────────────────────────────── */
+#complete {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: var(--bg);
+  flex-direction: column;
+  align-items: center;
+  padding: 2.5rem 1.5rem 4rem;
+  overflow-y: auto;
+  gap: 1.25rem;
+}
+#complete.visible { display: flex; }
+
+.complete-head { text-align: center; }
+.complete-title { font-size: 2rem; font-weight: 800; margin-bottom: 0.4rem; }
+.complete-sub { color: var(--muted); font-size: 0.9rem; }
+
+.tx-box {
+  width: 100%;
+  max-width: 680px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 0.5rem;
+  padding: 1.5rem;
+  max-height: 55vh;
+  overflow-y: auto;
+}
+
+.tx-header {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--muted);
+  margin-bottom: 1rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.tx-entry { margin-bottom: 1rem; padding-bottom: 1rem; border-bottom: 1px solid var(--border); }
+.tx-entry:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+.tx-who { font-size: 0.75rem; font-weight: 700; margin-bottom: 0.25rem; }
+.tx-who.you  { color: var(--success); }
+.tx-who.them { color: var(--accent2); }
+.tx-who.coach { color: var(--warn); }
+.tx-msg { font-size: 0.88rem; line-height: 1.65; }
+
+.tx-empty { text-align: center; color: var(--muted); padding: 2rem; font-size: 0.9rem; }
+
+.btn-copy {
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  padding: 0.8rem 2.25rem;
+  border-radius: 0.6rem;
+  font-size: 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.15s, transform 0.15s;
+}
+.btn-copy:hover { background: var(--accent2); transform: translateY(-1px); }
+
+.btn-restart {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--muted);
+  padding: 0.8rem 2.25rem;
+  border-radius: 0.6rem;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: border-color 0.2s, color 0.2s;
+}
+.btn-restart:hover { border-color: var(--accent); color: var(--accent2); }
+
+/* ── LOADING ──────────────────────────────────────── */
+#loader {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(251,247,239,0.9);
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  z-index: 200;
+  backdrop-filter: blur(4px);
+}
+#loader.on { display: flex; }
+
+.spinner {
+  width: 42px; height: 42px;
+  border: 3px solid var(--border);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: spin 0.9s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+.loader-text { color: var(--muted); font-size: 0.9rem; }
+
+/* ── TOAST ────────────────────────────────────────── */
+.toast {
+  position: fixed;
+  bottom: 1.75rem;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #fffdf8;
+  border: 1px solid var(--border);
+  color: var(--text);
+  padding: 0.65rem 1.5rem;
+  border-radius: 9999px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  z-index: 300;
+  animation: toastIn 0.2s ease;
+  pointer-events: none;
+  box-shadow: 0 10px 24px var(--shadow);
+}
+@keyframes toastIn { from { opacity:0; transform: translateX(-50%) translateY(8px); } }
+
+/* ── SHARED ANIMS ─────────────────────────────────── */
+@keyframes fadeDown {
+  from { opacity: 0; transform: translateY(-14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── CANVAS ───────────────────────────────────────── */
+#bgc {
+  position: fixed; inset: 0;
+  pointer-events: none;
+  z-index: -1;
+  opacity: 0.32;
+}
+</style>
+</head>
+<body>
+
+<canvas id="bgc"></canvas>
+
+<!-- ── SETUP ─────────────────────────────────────── -->
+<div id="setup">
+  <div class="brand">
+    <div class="brand-title">Assert Yourself</div>
+    <div class="brand-sub">Practice real-world refusal with steady, respectful language</div>
+  </div>
+
+  <div class="key-section">
+    <label>Google AI (Gemini) API Key</label>
+    <div class="key-row">
+      <input type="password" id="keyInput" class="key-input"
+             placeholder="Paste your Gemini API key…" autocomplete="off">
+      <button class="btn-save" onclick="saveKey()">Save</button>
+    </div>
+    <div class="key-note">Stored locally — never sent anywhere except directly to Google.</div>
+  </div>
+
+  <div class="scenarios-label">Choose a scenario to practice</div>
+  <div class="grid" id="grid"></div>
+</div>
+
+<!-- ── CONVERSATION ───────────────────────────────── -->
+<div id="conv" class="phase-challenger">
+  <div class="conv-top">
+    <div class="scenario-chip">
+      <div class="scenario-chip-title" id="chipTitle">Scenario</div>
+      <div class="scenario-chip-text" id="chipText"></div>
+    </div>
+    <div class="round-tracker">
+      <div class="round-dots" id="rdots">
+        <div class="rdot"></div>
+        <div class="rdot"></div>
+        <div class="rdot"></div>
+        <div class="rdot"></div>
+        <div class="rdot"></div>
+      </div>
+      <div class="round-label">Rounds</div>
+    </div>
+  </div>
+
+  <div class="centre">
+    <div class="avatar-wrap" id="avatarWrap">
+      <div class="ring r1" id="r1"></div>
+      <div class="ring r2" id="r2"></div>
+      <div class="ring r3" id="r3"></div>
+      <div class="avatar-inner" id="avatarEmoji">🧑</div>
+    </div>
+    <div style="text-align:center">
+      <div class="char-name" id="charName">—</div>
+      <div class="char-role" id="charRole">Your Friend</div>
+    </div>
+    <div class="wave-wrap" id="waveWrap"></div>
+    <div class="status-row">
+      <div class="sdot" id="sdot"></div>
+      <div class="stext" id="stext">Connecting…</div>
+    </div>
+  </div>
+
+  <div class="conv-bottom">
+    <div class="hint" id="hint">
+      <strong>Tip:</strong> Speak naturally and assertively. They will push back, so stay clear, kind, and steady.
+    </div>
+    <button class="btn-coach" id="coachBtn" onclick="switchToCoach()">🎯 Talk to Coach</button>
+    <button class="btn-end" id="endBtn" onclick="endSession()">End Session</button>
+  </div>
+</div>
+
+<!-- ── COMPLETE ───────────────────────────────────── -->
+<div id="complete">
+  <div class="complete-head">
+    <div class="complete-title">Session Complete</div>
+    <div class="complete-sub">Full transcript of your practice session</div>
+  </div>
+  <div class="tx-box">
+    <div class="tx-header">Conversation Transcript</div>
+    <div id="txContent"></div>
+  </div>
+  <button class="btn-copy" onclick="copyTranscript()">Copy Transcript</button>
+  <button class="btn-restart" onclick="restart()">Practice Another Scenario</button>
+</div>
+
+<!-- ── LOADER ─────────────────────────────────────── -->
+<div id="loader">
+  <div class="spinner"></div>
+  <div class="loader-text" id="loaderText">Connecting…</div>
+</div>
+
+<script>
+/* =====================================================
+   SCENARIOS
+===================================================== */
+const SCENARIOS = [
+  {
+    id: 'party',
+    title: 'The Party Problem',
+    sub: "Your friend just won't let it go",
+    desc: 'Alex is throwing a huge party this Saturday and insists you have to come — even though you have a major exam on Monday.',
+    emoji: '🎉',
+    char: 'Alex',
+    role: 'Your Friend',
+    difficulty: 'medium',
+    voice: 'Charon',
+    prompt: `You are Alex, an enthusiastic and persistent friend throwing a big party this Saturday. You REALLY want the student to come. You know they have an exam Monday but think they're being too uptight.
+
+Push back firmly over exactly 4 of YOUR speaking turns, then accept gracefully.
+
+Turn 1: Minimize the exam. "Come on, you can study Sunday! It's one night."
+Turn 2: FOMO angle. "Literally everyone is going to be there — you'll regret missing it."
+Turn 3: Emotional appeal. "I planned this whole thing and you're one of my closest friends. I really need you there."
+Turn 4: One final ask. "Just come for an hour. You don't even have to stay late, I promise."
+After turn 4: Accept warmly. "Okay… I hear you. Go ace that exam. Let's hang after, deal?"
+
+Rules: 2–3 sentences each turn. Stay fully in character. Be persuasive, never cruel. No mention of AI.`,
+    coachCtx: 'refusing a friend\'s pressure to attend a party while needing to study for an exam'
+  },
+  {
+    id: 'homework',
+    title: 'The Homework Ask',
+    sub: 'The deadline is today and they want your work',
+    desc: 'Jordan asks you to share your assignment — the one you spent three hours on — because they "forgot" to do theirs.',
+    emoji: '📋',
+    char: 'Jordan',
+    role: 'Your Classmate',
+    difficulty: 'medium',
+    voice: 'Fenrir',
+    prompt: `You are Jordan, panicking because homework is due today and you forgot to do it. You're asking the student to share their work.
+
+Push back over 4 of YOUR speaking turns, then accept their refusal.
+
+Turn 1: Minimize risk. "The teacher won't even know. Please — just this once."
+Turn 2: Desperation. "If I get a zero I'll fail the class. You'd literally be saving me."
+Turn 3: Friendship angle. "You always say you have my back. I would do it for you."
+Turn 4: Compromise ask. "Just let me see the structure — I'll write it in my own words."
+After turn 4: Back down. "Fine. I get it. I'll take the zero. Thanks anyway."
+
+Rules: 2–3 sentences each. Sound stressed, not mean. Stay in character.`,
+    coachCtx: 'refusing a classmate who wanted to copy homework'
+  },
+  {
+    id: 'curfew',
+    title: 'The Curfew Clash',
+    sub: 'They think your rules are ridiculous',
+    desc: 'The group wants to stay out way past your curfew and Sam thinks you\'re being childish for caring.',
+    emoji: '🌙',
+    char: 'Sam',
+    role: 'Your Friend',
+    difficulty: 'hard',
+    voice: 'Kore',
+    prompt: `You are Sam, who thinks curfews are ridiculous. The group is staying out late and the student is the only one who says they need to leave.
+
+Push back over 4 of YOUR speaking turns, then back off.
+
+Turn 1: Mock the rule. "It's Friday night — nobody's curfew matters on Fridays."
+Turn 2: Peer pressure. "Nobody else has to leave. Don't be the one to ruin the night."
+Turn 3: Challenge autonomy. "You're old enough to make your own choices. You don't have to follow every rule."
+Turn 4: Emotional. "If you leave now, I'm honestly going to be hurt. We never get nights like this."
+After turn 4: Reluctantly accept. "Fine, whatever. I just think you're making a mistake. Text me when you're home."
+
+Rules: 2–3 sentences. Sound cool and slightly judgmental, not mean. Stay in character.`,
+    coachCtx: 'asserting their curfew boundary against a judgmental friend'
+  },
+  {
+    id: 'photo',
+    title: 'The Post Pressure',
+    sub: "Share the photo NOW — everyone already did",
+    desc: "Riley wants you to post a group photo, but something about it makes you uncomfortable and you'd rather not.",
+    emoji: '📱',
+    char: 'Riley',
+    role: 'Your Friend',
+    difficulty: 'hard',
+    voice: 'Aoede',
+    prompt: `You are Riley, who doesn't understand why the student won't post a group photo.
+
+Push back over 4 of YOUR speaking turns, then accept.
+
+Turn 1: Minimize. "It's literally just a photo. You look great! Everyone posted it already."
+Turn 2: Social pressure. "People are going to notice that you're not in any posts from tonight."
+Turn 3: Take it personally. "Are you embarrassed to be in a photo with me? Is that what this is?"
+Turn 4: Compromise ask. "Can you just crop it or use a filter or something? I don't want to be the only one."
+After turn 4: Accept. "Okay, I don't get it, but it's your account. I'll just tag you in mine."
+
+Rules: 2–3 sentences. Sound a little hurt but not villainous. Stay in character.`,
+    coachCtx: 'setting a boundary around their social media presence'
+  },
+  {
+    id: 'favor',
+    title: 'The Impossible Favor',
+    sub: 'They need you right now — no exceptions',
+    desc: "Morgan needs you to drive them across town immediately, even though you already have somewhere to be.",
+    emoji: '🚗',
+    char: 'Morgan',
+    role: 'Your Friend',
+    difficulty: 'medium',
+    voice: 'Puck',
+    prompt: `You are Morgan, who needs a ride across town and doesn't fully realize how inconvenient this is.
+
+Push back over 4 of YOUR speaking turns, then understand.
+
+Turn 1: Downplay. "It'll take 20 minutes max, you'll still make it to wherever you're going."
+Turn 2: Helpless. "I have literally nobody else to ask. You're my only option right now."
+Turn 3: Obligation. "You have a car and I need help. That's what friends are for."
+Turn 4: Guilt. "Fine, I'll just figure it out somehow. I thought you actually cared about me."
+After turn 4: Back down. "Okay, okay. I'm sorry — I shouldn't have put you in this spot. I'll figure it out."
+
+Rules: 2–3 sentences. Sound stressed and a little desperate, not cruel. Stay in character.`,
+    coachCtx: 'saying no to a last-minute favor that was genuinely inconvenient'
+  }
+];
+
+/* =====================================================
+   STATE
+===================================================== */
+let state = 'setup';      // setup | conv | coach | complete
+let scenario = null;
+let ws = null;
+let audioCtx = null;
+let micStream = null;
+let scriptProc = null;
+let player = null;
+let phase = 'challenger'; // challenger | coach
+let rounds = 0;
+let aiSpeaking = false;
+let transcript = [];
+let wbars = [];
+let wAnim = null;
+// Buffers for assembling word-by-word transcription chunks into full turns
+let aiTxBuf = '';
+let userTxBuf = '';
+
+/* =====================================================
+   AUDIO HELPERS
+===================================================== */
+function f32toPCM16(buf) {
+  const out = new Int16Array(buf.length);
+  for (let i = 0; i < buf.length; i++) {
+    const s = Math.max(-1, Math.min(1, buf[i]));
+    out[i] = s < 0 ? s * 32768 : s * 32767;
+  }
+  return out;
+}
+
+function b64toAB(b64) {
+  const bin = atob(b64);
+  const ab = new ArrayBuffer(bin.length);
+  const v = new Uint8Array(ab);
+  for (let i = 0; i < bin.length; i++) v[i] = bin.charCodeAt(i);
+  return ab;
+}
+
+function ABtob64(buf) {
+  const bytes = new Uint8Array(buf);
+  let s = '';
+  for (let i = 0; i < bytes.length; i += 8192)
+    s += String.fromCharCode(...bytes.subarray(i, i + 8192));
+  return btoa(s);
+}
+
+/* =====================================================
+   AUDIO PLAYER (24 kHz PCM from Gemini)
+===================================================== */
+class Player {
+  constructor() {
+    // Don't set a fixed sample rate — let the browser use its native rate
+    // and we'll resample manually. This avoids the suspended-context issue
+    // on strict browsers.
+    this.ctx = new AudioContext();
+    this.sampleRate = 24000; // Gemini output rate
+    this.t = 0;
+    // Eagerly resume on construction (we're always inside a user gesture here)
+    this.ctx.resume().catch(() => {});
+  }
+
+  play(b64) {
+    if (!b64) return;
+    const resume = this.ctx.state === 'suspended' ? this.ctx.resume() : Promise.resolve();
+    resume.then(() => {
+      try {
+        const ab = b64toAB(b64);
+        const i16 = new Int16Array(ab);
+        const f32 = new Float32Array(i16.length);
+        for (let i = 0; i < i16.length; i++) f32[i] = i16[i] / 32768;
+
+        // Resample from 24000 Hz to AudioContext native rate if needed
+        const nativeSR = this.ctx.sampleRate;
+        let samples = f32;
+        if (nativeSR !== this.sampleRate) {
+          const ratio = this.sampleRate / nativeSR;
+          const newLen = Math.round(f32.length / ratio);
+          samples = new Float32Array(newLen);
+          for (let i = 0; i < newLen; i++) {
+            const src = i * ratio;
+            const lo = Math.floor(src), hi = Math.min(lo + 1, f32.length - 1);
+            samples[i] = f32[lo] + (src - lo) * (f32[hi] - f32[lo]);
+          }
+        }
+
+        const buf = this.ctx.createBuffer(1, samples.length, nativeSR);
+        buf.getChannelData(0).set(samples);
+        const src = this.ctx.createBufferSource();
+        src.buffer = buf;
+        src.connect(this.ctx.destination);
+        const now = this.ctx.currentTime;
+        const start = Math.max(now, this.t);
+        src.start(start);
+        this.t = start + buf.duration;
+      } catch (err) {
+        console.error('[Player] play error:', err);
+      }
+    });
+  }
+
+  reset() { this.t = 0; }
+  close() { try { this.ctx.close(); } catch(e) {} }
+}
+
+/* =====================================================
+   WAVEFORM
+===================================================== */
+function initWave() {
+  const wrap = document.getElementById('waveWrap');
+  wrap.innerHTML = '';
+  wbars = [];
+  for (let i = 0; i < 36; i++) {
+    const b = document.createElement('div');
+    b.className = 'wbar';
+    b.style.height = '4px';
+    wrap.appendChild(b);
+    wbars.push(b);
+  }
+}
+
+function animWave(on) {
+  if (wAnim) { cancelAnimationFrame(wAnim); wAnim = null; }
+  if (!on) { wbars.forEach(b => { b.style.height = '4px'; b.style.opacity = '0.4'; }); return; }
+  function frame() {
+    const t = Date.now() / 190;
+    wbars.forEach((b, i) => {
+      const v = (Math.sin(t + i * 0.38) * 0.5 + 0.5) + (Math.sin(t * 1.4 + i * 0.72) * 0.3 + 0.3);
+      b.style.height = (v * 21 + 4) + 'px';
+      b.style.opacity = (0.4 + v * 0.55).toString();
+    });
+    wAnim = requestAnimationFrame(frame);
+  }
+  frame();
+}
+
+/* =====================================================
+   BACKGROUND CANVAS (subtle particles)
+===================================================== */
+function initBg() {
+  const c = document.getElementById('bgc');
+  const ctx = c.getContext('2d');
+  const resize = () => { c.width = innerWidth; c.height = innerHeight; };
+  resize();
+  addEventListener('resize', resize);
+  const pts = Array.from({length: 55}, () => ({
+    x: Math.random() * innerWidth, y: Math.random() * innerHeight,
+    r: Math.random() * 1.8 + 0.4,
+    dx: (Math.random() - 0.5) * 0.25,
+    dy: (Math.random() - 0.5) * 0.25
+  }));
+  (function draw() {
+    ctx.clearRect(0, 0, c.width, c.height);
+    pts.forEach(p => {
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+      ctx.fillStyle = 'rgba(79,143,120,0.42)';
+      ctx.fill();
+      p.x += p.dx; p.y += p.dy;
+      if (p.x < 0 || p.x > c.width)  p.dx *= -1;
+      if (p.y < 0 || p.y > c.height) p.dy *= -1;
+    });
+    requestAnimationFrame(draw);
+  })();
+}
+
+/* =====================================================
+   SETUP
+===================================================== */
+function initSetup() {
+  const saved = localStorage.getItem('gemini_key');
+  if (saved) document.getElementById('keyInput').value = saved;
+  const grid = document.getElementById('grid');
+  grid.innerHTML = '';
+  SCENARIOS.forEach(s => {
+    const c = document.createElement('div');
+    c.className = 'card';
+    c.innerHTML = `
+      <div class="card-emoji">${s.emoji}</div>
+      <div class="card-title">${s.title}</div>
+      <div class="card-sub">${s.sub}</div>
+      <div class="card-desc">${s.desc}</div>
+      <span class="badge badge-${s.difficulty}">${s.difficulty}</span>`;
+    c.onclick = () => startScenario(s);
+    grid.appendChild(c);
+  });
+}
+
+function saveKey() {
+  const v = document.getElementById('keyInput').value.trim();
+  if (!v) return;
+  localStorage.setItem('gemini_key', v);
+  toast('API key saved ✓');
+}
+
+/* =====================================================
+   WEBSOCKET / GEMINI LIVE API
+===================================================== */
+const MODEL = 'models/gemini-3.1-flash-live-preview';
+
+function buildSysPrompt(s, ph) {
+  if (ph === 'challenger') return s.prompt;
+  const txText = transcript.length
+    ? transcript.map(e => `${e.who}: "${e.msg}"`).join('\n')
+    : '(No transcript captured — conversation was voice-only.)';
+  return `You are Coach Morgan, a warm and skilled communication coach. A student just finished a practice scenario involving ${s.coachCtx}.
+
+Transcript of their conversation:
+---
+${txText}
+---
+
+Your role:
+- Open by warmly acknowledging what they just went through
+- Ask how they felt in the moment — let them process verbally
+- Ask about specific moments: what felt natural, what felt hard
+- Help them see what assertive communication actually sounds like vs. making excuses or being harsh
+- Name one specific thing they did well (be concrete)
+- Offer one gentle, actionable suggestion for next time
+- Close with genuine encouragement
+- Ask one question at a time; 3–4 sentences per response; be warm and specific
+- Do not mention being an AI`;
+}
+
+function openWS(s, ph) {
+  const key = localStorage.getItem('gemini_key');
+  if (!key) { alert('Please save your API key first.'); return; }
+  showLoader(ph === 'challenger' ? 'Starting your scenario…' : 'Connecting to your coach…');
+
+  // v1beta is required for gemini-2.5+ / gemini-3.x models; v1alpha works for 2.0
+  const url = `wss://generativelanguage.googleapis.com/ws/google.ai.generativelanguage.v1beta.GenerativeService.BidiGenerateContent?key=${key}`;
+  console.log('[WS] Connecting to', url.replace(key, '***'));
+  ws = new WebSocket(url);
+
+  ws.onopen = () => {
+    ws.send(JSON.stringify({
+      setup: {
+        model: MODEL,
+        generationConfig: {
+          responseModalities: ['AUDIO'],
+          speechConfig: {
+            voiceConfig: {
+              prebuiltVoiceConfig: { voiceName: s.voice || 'Aoede' }
+            }
+          }
+        },
+        systemInstruction: { parts: [{ text: buildSysPrompt(s, ph) }] },
+        inputAudioTranscription:  {},
+        outputAudioTranscription: {}
+      }
+    }));
+  };
+
+  ws.onmessage = e => {
+    if (e.data instanceof Blob) { e.data.text().then(t => handleMsg(t)); return; }
+    if (e.data instanceof ArrayBuffer) {
+      // Some environments deliver audio as raw binary — treat as PCM
+      console.log('[WS] Binary frame received, length:', e.data.byteLength);
+      return;
+    }
+    handleMsg(e.data);
+  };
+
+  ws.onerror = err => {
+    console.error('[WS] Error:', err);
+    hideLoader();
+    toast('Connection failed — check your API key and network.');
+  };
+  ws.onclose = ev => {
+    console.log('[WS] Closed:', ev.code, ev.reason);
+    if ((state === 'conv' || state === 'coach') && ev.code !== 1000)
+      toast(`Connection lost (${ev.code}). Please try restarting.`);
+  };
+}
+
+function handleMsg(raw) {
+  let msg;
+  try { msg = JSON.parse(raw); } catch { console.warn('[handleMsg] parse error:', raw.slice?.(0,200)); return; }
+
+  // Log everything except audio blobs to keep console readable
+  const dbg = JSON.parse(JSON.stringify(msg));
+  const parts = dbg?.serverContent?.modelTurn?.parts || [];
+  parts.forEach(p => { if (p.inlineData?.data) p.inlineData.data = `<audio ${p.inlineData.data.length}b>`; });
+  console.log('[MSG]', JSON.stringify(dbg));
+
+  if (msg.setupComplete) {
+    hideLoader();
+    // Kick off the conversation with a silent prompt
+    if (ws && ws.readyState === WebSocket.OPEN) {
+      ws.send(JSON.stringify({
+        clientContent: {
+          turns: [{ role: 'user', parts: [{ text: 'Please begin.' }] }],
+          turnComplete: true
+        }
+      }));
+    }
+    startMic();
+    return;
+  }
+
+  const sc = msg.serverContent;
+  if (!sc) return;
+
+  // Audio chunks — start playback immediately for low latency
+  if (sc.modelTurn?.parts) {
+    sc.modelTurn.parts.forEach(p => {
+      if (p.inlineData?.mimeType?.startsWith('audio/')) {
+        setAI(true);
+        player?.play(p.inlineData.data);
+      }
+    });
+  }
+
+  // Buffer transcription chunks — they arrive word-by-word.
+  // We flush them as a single transcript entry on turnComplete.
+  if (sc.outputTranscription?.text)
+    aiTxBuf += sc.outputTranscription.text;
+  if (sc.inputTranscription?.text)
+    userTxBuf += sc.inputTranscription.text;
+
+  // Turn complete — flush buffers as single entries
+  if (sc.turnComplete) {
+    setAI(false);
+
+    const aiSpeaker = phase === 'challenger' ? scenario.char : 'Coach Morgan';
+    if (aiTxBuf.trim())  { addTx(aiSpeaker, aiTxBuf.trim(), phase); aiTxBuf = ''; }
+    if (userTxBuf.trim()) { addTx('You', userTxBuf.trim(), 'student'); userTxBuf = ''; }
+
+    if (phase === 'challenger') {
+      rounds++;
+      updateDots();
+      if (rounds >= 4) showCoachBtn();
+    }
+  }
+
+  // Interrupted (student spoke over AI) — discard buffered AI text for this turn
+  if (sc.interrupted) { player?.reset(); setAI(false); aiTxBuf = ''; }
+}
+
+/* =====================================================
+   MICROPHONE (16 kHz → Gemini)
+===================================================== */
+
+// Called during user gesture (scenario click / switchToCoach click) so the
+// AudioContext is created while the browser considers the page "activated".
+function initAudioCtx() {
+  try { audioCtx?.close(); } catch {}
+  // Use the browser's native rate; we resample to 16 kHz before sending.
+  audioCtx = new AudioContext();
+  // Resume immediately — we're inside a user gesture here.
+  audioCtx.resume().then(() => {
+    console.log('[MIC] AudioContext state after resume:', audioCtx.state, '@ ', audioCtx.sampleRate, 'Hz');
+  });
+}
+
+async function startMic() {
+  try {
+    // audioCtx was already created in the user-gesture path; just resume in
+    // case the browser suspended it between click and this async callback.
+    if (audioCtx?.state === 'suspended') await audioCtx.resume();
+
+    micStream = await navigator.mediaDevices.getUserMedia({
+      audio: { echoCancellation: true, noiseSuppression: true, channelCount: 1 }
+    });
+
+    const nativeSR = audioCtx.sampleRate;
+    const targetSR = 16000;
+    const src = audioCtx.createMediaStreamSource(micStream);
+    scriptProc = audioCtx.createScriptProcessor(4096, 1, 1);
+
+    let sendCount = 0;
+    scriptProc.onaudioprocess = e => {
+      if (ws?.readyState !== WebSocket.OPEN || aiSpeaking) return;
+
+      let f32 = e.inputBuffer.getChannelData(0);
+
+      // Resample from device native rate down to 16 kHz if needed
+      if (nativeSR !== targetSR) {
+        const ratio = nativeSR / targetSR;
+        const newLen = Math.round(f32.length / ratio);
+        const resampled = new Float32Array(newLen);
+        for (let i = 0; i < newLen; i++) {
+          const s = i * ratio;
+          const lo = Math.floor(s), hi = Math.min(lo + 1, f32.length - 1);
+          resampled[i] = f32[lo] + (s - lo) * (f32[hi] - f32[lo]);
+        }
+        f32 = resampled;
+      }
+
+      const pcm = f32toPCM16(f32);
+      ws.send(JSON.stringify({
+        realtimeInput: {
+          audio: { data: ABtob64(pcm.buffer), mimeType: 'audio/pcm;rate=16000' }
+        }
+      }));
+
+      // Log first send and every 100th after to confirm mic is live
+      if (sendCount === 0) console.log('[MIC] First chunk sent, native SR:', nativeSR);
+      sendCount++;
+    };
+
+    src.connect(scriptProc);
+    scriptProc.connect(audioCtx.destination);
+    setStatus('listening', 'Your turn — speak naturally');
+    console.log('[MIC] Microphone started, context state:', audioCtx.state);
+  } catch (err) {
+    console.error('[MIC] Error:', err);
+    toast('Microphone access denied. Please allow mic access and reload.');
+  }
+}
+
+function stopMic() {
+  try { scriptProc?.disconnect(); } catch {}
+  // Don't close audioCtx here — it will be reused or replaced by initAudioCtx().
+  micStream?.getTracks().forEach(t => t.stop());
+  scriptProc = null; micStream = null;
+}
+
+function closeAudioCtx() {
+  try { audioCtx?.close(); } catch {}
+  audioCtx = null;
+}
+
+/* =====================================================
+   UI HELPERS
+===================================================== */
+function setStatus(cls, txt) {
+  document.getElementById('sdot').className = 'sdot ' + cls;
+  document.getElementById('stext').textContent = txt;
+}
+
+function setAI(on) {
+  aiSpeaking = on;
+  ['r1','r2','r3'].forEach(id => {
+    document.getElementById(id).classList.toggle('active', on);
+  });
+  if (on) {
+    const who = phase === 'challenger' ? scenario.char : 'Coach Morgan';
+    setStatus('speaking', `${who} is speaking…`);
+    animWave(true);
+  } else {
+    setStatus('listening', 'Your turn — speak naturally');
+    animWave(false);
+  }
+}
+
+function updateDots() {
+  document.querySelectorAll('.rdot').forEach((d, i) => d.classList.toggle('lit', i < rounds));
+}
+
+function showCoachBtn() {
+  document.getElementById('coachBtn').classList.add('show');
+  document.getElementById('endBtn').classList.add('nudge');
+  document.getElementById('hint').innerHTML =
+    '<strong>Ready?</strong> When the conversation feels natural to wrap up, click "Talk to Coach" for personalized feedback.';
+}
+
+function addTx(who, msg, ph) {
+  // Deduplicate
+  const last = transcript[transcript.length - 1];
+  if (last && last.who === who && last.msg === msg) return;
+  transcript.push({ who, msg, ph });
+}
+
+function showLoader(txt) {
+  document.getElementById('loaderText').textContent = txt;
+  document.getElementById('loader').classList.add('on');
+}
+function hideLoader() { document.getElementById('loader').classList.remove('on'); }
+
+function toast(msg) {
+  const t = document.createElement('div');
+  t.className = 'toast';
+  t.textContent = msg;
+  document.body.appendChild(t);
+  setTimeout(() => t.remove(), 2200);
+}
+
+/* =====================================================
+   FLOW
+===================================================== */
+function startScenario(s) {
+  const key = localStorage.getItem('gemini_key');
+  if (!key) { alert('Please enter and save your Google API key first.'); return; }
+
+  scenario = s;
+  transcript = [];
+  rounds = 0;
+  phase = 'challenger';
+  state = 'conv';
+  aiTxBuf = ''; userTxBuf = '';
+
+  document.getElementById('chipTitle').textContent = s.title;
+  document.getElementById('chipText').textContent = s.desc;
+  document.getElementById('avatarEmoji').textContent = s.emoji;
+  document.getElementById('charName').textContent = s.char;
+  document.getElementById('charRole').textContent = s.role;
+  document.getElementById('coachBtn').classList.remove('show');
+  document.getElementById('endBtn').classList.remove('nudge');
+  document.getElementById('hint').innerHTML =
+    '<strong>Tip:</strong> Speak naturally and assertively. They will push back, so stay clear, kind, and steady.';
+
+  updateDots();
+  initWave();
+
+  const conv = document.getElementById('conv');
+  conv.className = 'visible phase-challenger';
+  document.getElementById('setup').style.display = 'none';
+
+  // Create AudioContext HERE — we're inside a user gesture (card click).
+  initAudioCtx();
+  player = new Player();
+  openWS(s, 'challenger');
+}
+
+function switchToCoach() {
+  phase = 'coach';
+  state = 'coach';
+
+  ws?.close(1000, 'switching to coach');
+  ws = null;
+  stopMic();
+  player?.reset();
+  aiTxBuf = ''; userTxBuf = '';
+
+  // Re-init AudioContext inside this user gesture (coach button click).
+  initAudioCtx();
+
+  const conv = document.getElementById('conv');
+  conv.className = 'visible phase-coach';
+  document.getElementById('charName').textContent = 'Coach Morgan';
+  document.getElementById('charRole').textContent = 'Your Communication Coach';
+  document.getElementById('avatarEmoji').textContent = '🎯';
+  document.getElementById('coachBtn').classList.remove('show');
+  document.getElementById('endBtn').classList.add('nudge');
+  document.getElementById('hint').innerHTML =
+    '<strong>Coaching Session:</strong> Your coach will ask one question at a time. Reflect honestly and use details from the conversation.';
+  document.querySelectorAll('.rdot').forEach(d => d.classList.remove('lit'));
+  setStatus('', 'Starting coaching session…');
+
+  player = new Player();
+  openWS(scenario, 'coach');
+}
+
+function endSession() {
+  ws?.close(1000, 'ended');
+  ws = null;
+  stopMic();
+  closeAudioCtx();
+  player?.close();
+  player = null;
+  showComplete();
+}
+
+function showComplete() {
+  state = 'complete';
+  document.getElementById('conv').classList.remove('visible');
+  document.getElementById('complete').classList.add('visible');
+
+  const content = document.getElementById('txContent');
+  if (!transcript.length) {
+    content.innerHTML = '<div class="tx-empty">No transcript captured — the conversation was purely spoken.<br>Click "Copy Transcript" to get a blank template.</div>';
+    return;
+  }
+  content.innerHTML = transcript.map(e => {
+    const cls = e.who === 'You' ? 'you' : (e.ph === 'coach' ? 'coach' : 'them');
+    return `<div class="tx-entry">
+      <div class="tx-who ${cls}">${e.who}</div>
+      <div class="tx-msg">${e.msg}</div>
+    </div>`;
+  }).join('');
+}
+
+function copyTranscript() {
+  const text = transcript.length
+    ? transcript.map(e => `${e.who}: ${e.msg}`).join('\n\n')
+    : '(No transcript available — conversation was voice-only.)';
+  navigator.clipboard.writeText(text)
+    .then(() => toast('Transcript copied ✓'))
+    .catch(() => {
+      const ta = document.createElement('textarea');
+      ta.value = text;
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand('copy');
+      ta.remove();
+      toast('Transcript copied ✓');
+    });
+}
+
+function restart() {
+  ws?.close(); ws = null;
+  stopMic();
+  closeAudioCtx();
+  player?.close(); player = null;
+  transcript = []; rounds = 0; scenario = null;
+  state = 'setup'; phase = 'challenger';
+
+  document.getElementById('complete').classList.remove('visible');
+  document.getElementById('setup').style.display = '';
+}
+
+/* =====================================================
+   INIT
+===================================================== */
+document.addEventListener('DOMContentLoaded', () => {
+  initBg();
+  initSetup();
+  document.getElementById('keyInput').addEventListener('keydown', e => {
+    if (e.key === 'Enter') saveKey();
+  });
+});
+</script>
+</body>
+</html>
